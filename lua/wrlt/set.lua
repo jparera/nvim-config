@@ -22,8 +22,6 @@ vim.opt.wrap = false
 
 vim.opt.termguicolors = true
 
-vim.cmd('syntax off')
-
 local wrlt = vim.api.nvim_create_augroup('wrlt.set', { clear = true })
 
 vim.api.nvim_create_autocmd('FileType', {
