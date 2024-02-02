@@ -19,6 +19,15 @@ lazy.setup({
         'tpope/vim-fugitive',
     },
     {
+        'catppuccin/nvim',
+        name = 'catppuccin',
+        config = function()
+            vim.g.catppuccin_flavour = 'mocha' -- latte, frappe, macchiato, mocha
+            require('catppuccin').setup {}
+            --vim.cmd.colorscheme('catppuccin')
+        end
+    },
+    {
         'rose-pine/neovim',
         name = 'rose-pine',
         priority = 1000,
