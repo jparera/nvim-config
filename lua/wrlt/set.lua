@@ -22,6 +22,7 @@ local wrlt = vim.api.nvim_create_augroup('wrlt.set', { clear = true })
 
 vim.api.nvim_create_autocmd('FileType', {
     desc = 'Configures local options for programming languages.',
+    pattern = 'c,cpp,bash,java,lua,python,rust,tmux,zsh',
     group = wrlt,
     callback = function()
         vim.opt_local.number = true
