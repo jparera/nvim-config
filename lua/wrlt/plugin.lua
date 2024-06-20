@@ -1,7 +1,7 @@
 local datapath = vim.fs.normalize(vim.fn.stdpath('data'))
 local lazypath = datapath .. '/lazy/lazy.nvim'
 
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({
         'git',
         'clone',
@@ -17,15 +17,6 @@ local lazy = require('lazy')
 lazy.setup({
     {
         'tpope/vim-fugitive',
-    },
-    {
-        'catppuccin/nvim',
-        name = 'catppuccin',
-        config = function()
-            vim.g.catppuccin_flavour = 'mocha' -- latte, frappe, macchiato, mocha
-            require('catppuccin').setup {}
-            --vim.cmd.colorscheme('catppuccin')
-        end
     },
     {
         'rose-pine/neovim',
