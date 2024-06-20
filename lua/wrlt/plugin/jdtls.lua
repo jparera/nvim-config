@@ -20,6 +20,13 @@ local function try_launch_jdtls()
                         configuration = {
                             updateBuildConfiguration = 'disabled',
                         },
+                        jdt = {
+                            ls = {
+                                protobufSupport = {
+                                    enabled = true,
+                                },
+                            },
+                        },
                         signatureHelp = {
                             enabled = true,
                             description = {
