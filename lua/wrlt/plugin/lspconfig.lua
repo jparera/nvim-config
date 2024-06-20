@@ -10,8 +10,8 @@ local function is_vim_path(root_dir)
     if root_dir == nil then
         return false
     end
-    local configpath = vim.fs.normalize(vim.fn.stdpath('config'))
-    local datapath = vim.fs.normalize(vim.fn.stdpath('data'))
+    local configpath = vim.fs.normalize(vim.fn.stdpath('config') --[[@as string]])
+    local datapath = vim.fs.normalize(vim.fn.stdpath('data') --[[@as string]])
     root_dir = vim.fs.normalize(root_dir)
     return is_base_path(configpath, root_dir) or is_base_path(datapath, root_dir)
 end

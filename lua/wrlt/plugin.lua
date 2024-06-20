@@ -1,7 +1,8 @@
-local datapath = vim.fs.normalize(vim.fn.stdpath('data'))
+local datapath = vim.fs.normalize(vim.fn.stdpath('data') --[[@as string]])
 local lazypath = datapath .. '/lazy/lazy.nvim'
+local uv = vim.uv or vim.loop
 
-if not vim.uv.fs_stat(lazypath) then
+if not uv.fs_stat(lazypath) then
     vim.fn.system({
         'git',
         'clone',
