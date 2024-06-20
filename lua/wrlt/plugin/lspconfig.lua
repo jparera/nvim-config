@@ -45,7 +45,7 @@ on_setups.lua_ls = function(config)
     config.root_dir = function(filename)
         local path = vim.fs.normalize(vim.fs.dirname(filename))
         if is_vim_path(path) then
-            return vim.fs.normalize(vim.fn.stdpath('config')) .. '/lua'
+            return vim.fs.normalize(vim.fn.stdpath('config') --[[@as string]]) .. '/lua'
         end
     end
     config.on_new_config = util.add_hook_after(config.on_new_config, on_new_lua_ls_config)
