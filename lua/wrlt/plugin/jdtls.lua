@@ -14,6 +14,12 @@ local function try_launch_jdtls()
                 autostart = vim.fn.executable('jdtls') == 1,
                 settings = {
                     java = {
+                        autobuild = {
+                            enabled = false,
+                        },
+                        configuration = {
+                            updateBuildConfiguration = 'disabled',
+                        },
                         signatureHelp = {
                             enabled = true,
                             description = {
