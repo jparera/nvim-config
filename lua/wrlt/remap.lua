@@ -16,16 +16,23 @@ vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv")
 
 local wrlt = vim.api.nvim_create_augroup('wrlt.remap', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+    desc = 'Map keys for java.',
+    pattern = 'java',
+    group = wrlt,
+    callback = function()
+        local jdtls = require('jdtls')
+        vim.keymap.set('n', '<Leader>o', jdtls.organize_imports)
+    end
+})
 vim.api.nvim_create_autocmd('LspAttach', {
     group = wrlt,
     desc = 'Map keys to vim.lsp.buf.*',
     callback = function(args)
         local opts = { buffer = args.buf }
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.hover, opts)
-        --vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+        local builtin = require('telescope.builtin')
+        vim.keymap.set('n', 'gd', builtin.lsp_definitions, opts)
+        vim.keymap.set('n', 'gi', builtin.lsp_implementations, opts)
         vim.keymap.set('n', '<Leader>f', vim.lsp.buf.format, opts)
     end,
 })
@@ -40,7 +47,7 @@ vim.api.nvim_create_autocmd('User', {
             vim.keymap.set('n', '<A-b>', builtin.buffers)
             vim.keymap.set('n', '<A-a>', builtin.find_files)
             vim.keymap.set('n', '<A-g>', builtin.git_files)
-            vim.keymap.set('n', '<A-x>', builtin.lsp_references)
+            vim.keymap.set('n', '<A-x>', builtin.lsp_dynamic_workspace_symbols)
             vim.keymap.set('n', '<A-s>', function()
                 builtin.grep_string {
                     preview = true,

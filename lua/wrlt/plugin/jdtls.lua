@@ -20,12 +20,30 @@ local function try_launch_jdtls()
                         configuration = {
                             updateBuildConfiguration = 'disabled',
                         },
+                        eclipse = {
+                            downloadSources = true,
+                        },
+                        implementationsCodeLens = {
+                            enabled = true,
+                        },
                         jdt = {
                             ls = {
                                 protobufSupport = {
                                     enabled = true,
                                 },
                             },
+                        },
+                        maven = {
+                            downloadSources = true,
+                        },
+                        referencesCodeLens = {
+                            enabled = true,
+                        },
+                        references = {
+                            includeDecompiledSources = false,
+                        },
+                        symbols = {
+                            includeSourceMethodDeclarations = true,
                         },
                         signatureHelp = {
                             enabled = true,
