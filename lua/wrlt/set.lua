@@ -17,6 +17,7 @@ vim.opt.smartindent = true
 vim.opt.wrap = false
 
 vim.opt.termguicolors = true
+vim.cmd.colorscheme('rose-pine-wrlt')
 
 local wrlt = vim.api.nvim_create_augroup('wrlt.set', { clear = true })
 

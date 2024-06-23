@@ -1,18 +1,22 @@
-local datapath = vim.fs.normalize(vim.fn.stdpath('data') --[[@as string]])
-local lazypath = datapath .. '/lazy/lazy.nvim'
-local uv = vim.uv or vim.loop
-
-if not uv.fs_stat(lazypath) then
-    vim.fn.system({
-        'git',
-        'clone',
-        '--filter=blob:none',
-        'https://github.com/folke/lazy.nvim.git',
-        '--branch=stable',
-        lazypath,
-    })
+local function try_install_lazy()
+    local datapath = vim.fs.normalize(vim.fn.stdpath('data') --[[@as string]])
+    local lazypath = datapath .. '/lazy/lazy.nvim'
+    local uv = vim.uv or vim.loop
+    if not uv.fs_stat(lazypath) then
+        vim.notify('Installing lazy...', vim.log.levels.WARN)
+        vim.fn.system({
+            'git',
+            'clone',
+            '--filter=blob:none',
+            'https://github.com/folke/lazy.nvim.git',
+            '--branch=stable',
+            lazypath,
+        })
+    end
+    vim.opt.rtp:prepend(lazypath)
 end
-vim.opt.rtp:prepend(lazypath)
+
+try_install_lazy()
 
 local lazy = require('lazy')
 lazy.setup({
