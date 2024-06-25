@@ -20,92 +20,106 @@ try_install_lazy()
 
 local lazy = require('lazy')
 lazy.setup({
-    {
-        'tpope/vim-fugitive',
+    rocks = {
+        enabled = false,
     },
-    {
-        'nvim-treesitter/nvim-treesitter',
-        build = ':TSUpdate',
-        opts = {
-            ensure_installed = {
-                'markdown',
-                'markdown_inline',
-                'vim',
-                'vimdoc',
-                'lua',
-                'c',
-                'java',
-                'javascript',
-                'typescript',
-                'html',
-                'css',
-                'json',
-                'go',
-                'rust',
-                'python',
-            },
-            ignore_install = {},
-            sync_install = false,
-            auto_install = true,
-            highlight = {
-                enable = true,
-                additional_vim_regex_highlighting = false,
-            },
-            indent = {
-                enable = true,
-            },
+    spec = {
+        {
+            'tpope/vim-fugitive',
         },
-        config = function(_, opts)
-            require('nvim-treesitter.configs').setup(opts)
-        end,
-    },
-    {
-        'nvim-telescope/telescope.nvim',
-        tag = '0.1.8',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
+        {
             'nvim-treesitter/nvim-treesitter',
+            build = ':TSUpdate',
+            opts = {
+                ensure_installed = {
+                    'markdown',
+                    'markdown_inline',
+                    'vim',
+                    'vimdoc',
+                    'lua',
+                    'c',
+                    'java',
+                    'javascript',
+                    'typescript',
+                    'html',
+                    'css',
+                    'json',
+                    'go',
+                    'rust',
+                    'python',
+                },
+                ignore_install = {},
+                sync_install = false,
+                auto_install = true,
+                highlight = {
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
+                indent = {
+                    enable = true,
+                },
+            },
+            config = function(_, opts)
+                require('nvim-treesitter.configs').setup(opts)
+            end,
         },
-        opts = {
-            defaults = {
-                preview = false,
+        {
+            'nvim-telescope/telescope.nvim',
+            tag = '0.1.8',
+            dependencies = {
+                'nvim-lua/plenary.nvim',
+                'nvim-treesitter/nvim-treesitter',
+            },
+            opts = {
+                defaults = {
+                    preview = false,
+                },
             },
         },
-    },
-    {
-        'williamboman/mason.nvim',
-        config = true,
-    },
-    {
-        'williamboman/mason-lspconfig.nvim',
-        dependendencies = {
+        {
             'williamboman/mason.nvim',
-        },
-        opts = {
-            ensure_installed = {
-                'jdtls',
-                'pyright',
-                'lua_ls',
-                'rust_analyzer',
+            opts = {
+                registries = {
+                    "github:jparera/mason-registry",
+                    "github:mason-org/mason-registry",
+                },
             },
         },
-    },
-    {
-        'neovim/nvim-lspconfig',
-        dependencies = {
+        {
             'williamboman/mason-lspconfig.nvim',
+            dependendencies = {
+                'williamboman/mason.nvim',
+            },
+            opts = {
+                ensure_installed = {
+                    'jdtls',
+                    'pyright',
+                    'lua_ls',
+                    'rust_analyzer',
+                },
+            },
         },
-        config = function()
-            require('wrlt.plugin.lspconfig').setup()
-        end
-    },
-    {
-        'mfussenegger/nvim-jdtls',
-        dependencies = {
-            'williamboman/mason-lspconfig.nvim',
+        {
+            'neovim/nvim-lspconfig',
+            dependencies = {
+                'williamboman/mason-lspconfig.nvim',
+            },
+            config = function()
+                require('wrlt.plugin.lspconfig').setup()
+            end
         },
-        config = function()
-            require('wrlt.plugin.jdtls').setup()
-        end
+        {
+            'mfussenegger/nvim-dap',
+        },
+        {
+            'mfussenegger/nvim-jdtls',
+            dependencies = {
+                'williamboman/mason-lspconfig.nvim',
+                'mfussenegger/nvim-dap',
+            },
+            config = function()
+                require('wrlt.plugin.jdtls').setup()
+            end
+        },
     },
 })

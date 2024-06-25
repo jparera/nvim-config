@@ -1,66 +1,85 @@
-local function try_launch_jdtls()
+local function check_installed_package(name)
     local registry = require('mason-registry')
-    local ok, pkg = pcall(registry.get_package, 'jdtls')
+    local ok, pkg = pcall(registry.get_package, name)
     if ok then
-        if pkg:is_installed() then
-            local config = {
-                cmd = {
-                    -- https://github.com/neovim/nvim-lspconfig/issues/2032#issuecomment-1200413852
-                    vim.fn.exepath('jdtls'),
-                    '--jvm-arg=-Xlog:disable',
-                    '--jvm-arg=-Djava.import.generatesMetadataFilesAtProjectRoot=false',
+        if not pkg:is_installed() then
+            vim.notify(name .. ' is not installed.', vim.log.levels.WARN)
+            return
+        end
+    else
+        vim.notify(name .. ' is not found.', vim.log.levels.WARN)
+        return
+    end
+    return pkg
+end
+
+local function try_launch_jdtls()
+    if not check_installed_package('jdtls') then
+        return
+    end
+
+    local config = {
+        autostart = vim.fn.executable('jdtls') == 1,
+        cmd = {
+            -- https://github.com/neovim/nvim-lspconfig/issues/2032#issuecomment-1200413852
+            vim.fn.exepath('jdtls'),
+            '--jvm-arg=-Xlog:disable',
+            '--jvm-arg=-Djava.import.generatesMetadataFilesAtProjectRoot=false',
+        },
+        filetypes = { 'java' },
+        init_options = {
+            bundles = {
+            },
+        },
+        settings = {
+            java = {
+                autobuild = {
+                    enabled = false,
                 },
-                filetypes = { 'java' },
-                autostart = vim.fn.executable('jdtls') == 1,
-                settings = {
-                    java = {
-                        autobuild = {
-                            enabled = false,
-                        },
-                        configuration = {
-                            updateBuildConfiguration = 'disabled',
-                        },
-                        eclipse = {
-                            downloadSources = true,
-                        },
-                        implementationsCodeLens = {
+                configuration = {
+                    updateBuildConfiguration = 'disabled',
+                },
+                eclipse = {
+                    downloadSources = true,
+                },
+                implementationsCodeLens = {
+                    enabled = true,
+                },
+                jdt = {
+                    ls = {
+                        protobufSupport = {
                             enabled = true,
-                        },
-                        jdt = {
-                            ls = {
-                                protobufSupport = {
-                                    enabled = true,
-                                },
-                            },
-                        },
-                        maven = {
-                            downloadSources = true,
-                        },
-                        referencesCodeLens = {
-                            enabled = true,
-                        },
-                        references = {
-                            includeDecompiledSources = false,
-                        },
-                        symbols = {
-                            includeSourceMethodDeclarations = true,
-                        },
-                        signatureHelp = {
-                            enabled = true,
-                            description = {
-                                enabled = true,
-                            },
                         },
                     },
                 },
-            }
-            require('jdtls').start_or_attach(config)
-        else
-            vim.notify('JDT LS is not installed.', vim.log.levels.WARN)
-        end
-    else
-        vim.notify('JDT LS is not found: ' .. pkg, vim.log.levels.WARN)
+                maven = {
+                    downloadSources = true,
+                },
+                referencesCodeLens = {
+                    enabled = true,
+                },
+                references = {
+                    includeDecompiledSources = false,
+                },
+                symbols = {
+                    includeSourceMethodDeclarations = true,
+                },
+                signatureHelp = {
+                    enabled = true,
+                    description = {
+                        enabled = true,
+                    },
+                },
+            },
+        },
+    }
+
+    if check_installed_package('java-debug-adapter') then
+        local jda_plugin_path = vim.env.MASON .. '/share/java-debug-adapter/com.microsoft.java.debug.plugin.jar'
+        table.insert(config.init_options.bundles, jda_plugin_path)
     end
+
+    require('jdtls').start_or_attach(config)
 end
 
 local function try_attach_jdtls()
