@@ -37,7 +37,7 @@ local function try_launch_jdtls()
                     enabled = false,
                 },
                 configuration = {
-                    updateBuildConfiguration = 'disabled',
+                    updateBuildConfiguration = 'automatic',
                 },
                 eclipse = {
                     downloadSources = true,
@@ -79,7 +79,28 @@ local function try_launch_jdtls()
         table.insert(config.init_options.bundles, jda_plugin_path)
     end
 
-    require('jdtls').start_or_attach(config)
+    local jdtls = require('jdtls')
+    jdtls.extendedClientCapabilities.actionableNotificationSupported = true
+    config.handlers = {
+        ['language/actionableNotification'] = function(err, result)
+            if err then
+                vim.notify(err, vim.log.levels.ERROR)
+            end
+            local opts = {
+                prompt = result.message,
+                format_item = function(item)
+                    return item.title
+                end
+            }
+            local function on_choice(item)
+                if item then
+                    vim.lsp.buf.execute_command(item)
+                end
+            end
+            vim.ui.select(result.commands, opts, on_choice)
+        end,
+    }
+    jdtls.start_or_attach(config)
 end
 
 local function try_attach_jdtls()
