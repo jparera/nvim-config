@@ -27,7 +27,7 @@ vim.api.nvim_create_autocmd('FileType', {
     group = wrlt,
     callback = function()
         vim.opt_local.number = true
-        vim.opt_local.relativenumber = true
+        vim.opt_local.relativenumber = false
         vim.opt_local.cursorline = true
         vim.opt_local.signcolumn = 'yes'
         vim.opt_local.colorcolumn = { '80', '100' }
