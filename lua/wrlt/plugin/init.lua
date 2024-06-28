@@ -103,6 +103,7 @@ lazy.setup({
             'neovim/nvim-lspconfig',
             dependencies = {
                 'williamboman/mason-lspconfig.nvim',
+                'mfussenegger/nvim-dap',
             },
             config = function()
                 require('wrlt.jdtls').setup()
