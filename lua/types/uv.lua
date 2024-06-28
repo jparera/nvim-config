@@ -9,6 +9,10 @@
 ---@class uv
 local M = {}
 
+--- Returns the current working directory.
+--- @return string | nil, string, string #Returns the current working directory or an assertable fail.
+function M.cwd() end
+
 ---Retrieve information about the file pointed to by path.
 ---Equivalent to stat(2).
 ---@param path string File path.
