@@ -45,9 +45,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
     group = wrlt,
     desc = 'Map keys to vim.lsp.buf.*',
     callback = function(args)
-        vim.keymap.set('n', '<M-1>', vim.lsp.buf.code_action,
-            set_opts('[LSP] Select a code action available at the current cursor position.', args.buf))
-        vim.keymap.set('n', '<M-f>', vim.lsp.buf.format, set_opts('[LSP] Format buffer.', args.buf))
+        local methods = vim.lsp.protocol.Methods
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client.supports_method(methods.textDocument_codeAction) then
+            vim.keymap.set('n', '<M-1>', vim.lsp.buf.code_action,
+                set_opts('[LSP] Select a code action available at the current cursor position.', args.buf))
+        end
+        if client.supports_method(methods.textDocument_formatting) then
+            vim.keymap.set('n', '<M-f>', vim.lsp.buf.format, set_opts('[LSP] Format buffer.', args.buf))
+        end
         local ok, builtin = pcall(require, 'telescope.builtin')
         if ok then
             vim.keymap.set('n', 'gD', builtin.lsp_definitions,
