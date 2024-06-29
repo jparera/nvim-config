@@ -1,4 +1,8 @@
-local function buffer_root_dir(bufnr)
+--- Resolves project root directory for the given buffer.
+---
+--- @param bufnr integer Buffer number (0 for current).
+--- @return string #Project root directory.
+local function buf_root_dir(bufnr)
     if vim.bo[bufnr].buftype == 'nofile' then
         return assert(vim.uv.cwd())
     else
@@ -31,7 +35,7 @@ local function try_start_ls(event)
         return
     end
 
-    local root_dir = buffer_root_dir(event.buf)
+    local root_dir = buf_root_dir(event.buf)
     ---@type vim.lsp.ClientConfig
     local config = {
         cmd = {

@@ -74,6 +74,20 @@ lazy.setup({
                 defaults = {
                     preview = false,
                 },
+                pickers = {
+                    grep_string = {
+                        preview = true,
+                    },
+                    lsp_definitions = {
+                        preview = true,
+                    },
+                    lsp_implementations = {
+                        preview = true,
+                    },
+                    lsp_references = {
+                        preview = true,
+                    },
+                }
             },
         },
         {
