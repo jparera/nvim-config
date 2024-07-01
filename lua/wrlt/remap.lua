@@ -1,5 +1,4 @@
 local util = require('wrlt.util')
-local jdtls = require('wrlt.jdtls')
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -19,18 +18,18 @@ vim.g.maplocalleader = ' '
 
 --- Key mapping config.
 --- @class KeymapConfig
---- @field desc string Human-readable description.
 --- @field mode string|string[] Mode short-name.
 --- @field lhs string Left-hand-side {lhs} of the mapping.
 --- @field rhs string|function Right-hand-side {rhs} of the mapping.
+--- @field desc string Human-readable description.
 --- @field guard? KeymapConfigGuard Guard mapping register behind this check function.
 --- @field global? boolean Global mapping.
 
 --- Create a buffer-local key mapping.
---- @param desc string Human-readable description.
 --- @param mode string|string[] Mode short-name.
 --- @param lhs string Left-hand-side {lhs} of the mapping.
 --- @param rhs string|function Right-hand-side {rhs} of the mapping.
+--- @param desc string Human-readable description.
 --- @param guard? KeymapConfigGuard Guard mapping register behind this check function.
 --- @return KeymapConfig
 local function map(mode, lhs, rhs, desc, guard)
@@ -48,7 +47,7 @@ end
 --- @param desc string Keymap description.
 --- @param bufnr? integer Buffer number used for local buffer mappings.
 ---
---- @return vim.keymap.set.Opts
+--- @return vim.keymap.set.Opts #Options.
 local function set_opts(desc, bufnr)
     return {
         desc = desc,
@@ -83,6 +82,7 @@ vim.keymap.set('v', '<M-k>', ":m '<-2<CR>gv=gv", set_opts('Move selection up.'))
 
 local wrlt = vim.api.nvim_create_augroup('wrlt.remap', { clear = true })
 
+local jdtls = require('wrlt.jdtls')
 vim.api.nvim_create_autocmd('FileType', {
     desc = 'Map keys for java files.',
     pattern = 'java',
@@ -92,7 +92,6 @@ vim.api.nvim_create_autocmd('FileType', {
         map('n', '<M-o>', jdtls.organize_imports, '[JDTLS] Organize buffer imports.'),
     },
 })
-
 
 --- Checks if LSP client supports the given protocol method.
 --- @param method string LSP protocol method.
@@ -104,36 +103,47 @@ local function check_client_supports(method)
     end
 end
 
-local function telescope_builtin()
+--- Lazy load of an optional module.
+---
+--- @param module string module name.
+local function optional(module)
     return setmetatable({}, {
-        __index = function(_, index)
+        __index = function(_, key)
             return function(...)
-                local ok, builtin = pcall(require, 'telescope.builtin')
+                local ok, m = pcall(require, module)
                 if ok then
-                    builtin[index](...)
+                    local v = m[key]
+                    if type(v) == 'function' then
+                        return v(...)
+                    else
+                        return v
+                    end
                 else
-                    vim.notify('Telescope is not installed.')
+                    vim.notify(module .. ' is not found.')
                 end
             end
         end,
     })
 end
 
+--- @module 'telescope.builtin'
+local builtin = optional('telescope.builtin')
 local methods = vim.lsp.protocol.Methods
-local lsp_implementations = telescope_builtin().lsp_implementations
-local lsp_references = telescope_builtin().references
 
+--- @return string|function rhs, string desc, KeymapConfigGuard? guard, boolean? global
 local function lsp_definitions()
-    local rhs = telescope_builtin().lsp_definitions
+    local rhs = builtin.lsp_definitions
     return rhs, '[LSP] Select a symbol definition.'
 end
 
+--- @return string|function rhs, string desc, KeymapConfigGuard? guard, boolean? global
 local function lsp_code_action()
     local desc = '[LSP] Select a code action available at the current cursor position.'
     local guard = check_client_supports(methods.textDocument_codeAction)
     return vim.lsp.buf.code_action, desc, guard
 end
 
+--- @return string|function rhs, string desc, KeymapConfigGuard? guard, boolean? global
 local function lsp_formatting()
     local desc = '[LSP] Format buffer.'
     local guard = check_client_supports(methods.textDocument_formatting)
@@ -149,8 +159,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
         map('n', 'gD', lsp_definitions()),
         map('n', 'gd', lsp_definitions()),
         map('n', '<LEADER>d', lsp_definitions()),
-        map('n', '<LEADER>i', lsp_implementations, '[LSP] Select a symbol implementation.'),
-        map('n', '<LEADER>r', lsp_references, '[LSP] Select a symbol reference.'),
+        map('n', '<LEADER>i', builtin.lsp_implementations, '[LSP] Select a symbol implementation.'),
+        map('n', '<LEADER>r', builtin.lsp_references, '[LSP] Select a symbol reference.'),
     }
 })
 
@@ -160,7 +170,6 @@ vim.api.nvim_create_autocmd('User', {
     group = wrlt,
     callback = function(args)
         if args.data == 'telescope.nvim' then
-            local builtin = require('telescope.builtin')
             vim.keymap.set('n', '<M-T>', vim.cmd.Telescope, set_opts('Open Telescope.'))
             vim.keymap.set('n', '<M-b>', builtin.buffers, set_opts('Select a buffer.'))
             vim.keymap.set('n', '<M-a>', builtin.find_files, set_opts('Select a file.'))
