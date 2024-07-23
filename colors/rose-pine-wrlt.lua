@@ -60,6 +60,7 @@ local highlights = {
     ModeMsg = { fg = palette.pine },
     MsgArea = { fg = palette.text, bg = palette.overlay },
     MoreMsg = { fg = palette.foam },
+    NonText = { fg = palette.iris },
     Normal = { fg = palette.text, bg = palette.base },
     NormalFloat = { bg = palette.overlay },
     NormalNC = { fg = palette.muted, bg = palette.base },
@@ -78,7 +79,7 @@ local highlights = {
     Visual = { fg = palette.text, bg = palette.highlight_med },
     WarningMsg = { fg = palette.gold },
     WinSeparator = { fg = palette.highlight_high },
-    Whitespace = { fg = palette.muted },
+    Whitespace = { fg = palette.iris },
 
     Added = { fg = palette.foam },
     Changed = { fg = palette.rose },
