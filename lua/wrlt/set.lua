@@ -16,6 +16,8 @@ vim.opt.smartindent = true
 
 vim.opt.wrap = false
 
+vim.opt.laststatus = 3
+
 vim.opt.termguicolors = true
 vim.cmd.colorscheme('rose-pine-wrlt')
 
