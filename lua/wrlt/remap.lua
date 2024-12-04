@@ -93,16 +93,6 @@ vim.api.nvim_create_autocmd('FileType', {
     },
 })
 
---- Checks if LSP client supports the given protocol method.
---- @param method string LSP protocol method.
---- @return KeymapConfigGuard # Guard function.
-local function check_client_supports(method)
-    return function(args)
-        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        return client.supports_method(method)
-    end
-end
-
 --- Lazy load of an optional module.
 ---
 --- @param module string module name.
@@ -128,7 +118,6 @@ end
 
 --- @module 'telescope.builtin'
 local builtin = optional('telescope.builtin')
-local methods = vim.lsp.protocol.Methods
 
 --- @return string|function rhs, string desc, KeymapConfigGuard? guard, boolean? global
 local function lsp_definitions()
@@ -136,26 +125,12 @@ local function lsp_definitions()
     return rhs, '[LSP] Select a symbol definition.'
 end
 
---- @return string|function rhs, string desc, KeymapConfigGuard? guard, boolean? global
-local function lsp_code_action()
-    local desc = '[LSP] Select a code action available at the current cursor position.'
-    local guard = check_client_supports(methods.textDocument_codeAction)
-    return vim.lsp.buf.code_action, desc, guard
-end
-
---- @return string|function rhs, string desc, KeymapConfigGuard? guard, boolean? global
-local function lsp_formatting()
-    local desc = '[LSP] Format buffer.'
-    local guard = check_client_supports(methods.textDocument_formatting)
-    return vim.lsp.buf.format, desc, guard
-end
-
 vim.api.nvim_create_autocmd('LspAttach', {
     group = wrlt,
     desc = 'Map keys to vim.lsp.buf.*',
     callback = callback_set_keymap_configs {
-        map('n', '<M-1>', lsp_code_action()),
-        map('n', '<M-f>', lsp_formatting()),
+        map('n', '<M-1>', vim.lsp.buf.code_action, '[LSP] Select a code action available at the current cursor position.'),
+        map('n', '<M-f>', vim.lsp.buf.format, '[LSP] Format buffer.'),
         map('n', 'gD', lsp_definitions()),
         map('n', 'gd', lsp_definitions()),
         map('n', '<LEADER>d', lsp_definitions()),
