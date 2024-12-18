@@ -50,7 +50,7 @@ local highlights = {
     -- Build-in highlighting groups
     ColorColumn = { bg = palette.surface },
     CurSearch = { bg = palette.highlight_high },
-    Cursor = { bg = palette.highlight_high },
+    Cursor = { bg = palette.muted },
     CursorLine = {},
     CursorLineNr = { bg = palette.overlay },
     ErrorMsg = { bg = palette.love },
@@ -66,7 +66,7 @@ local highlights = {
     Normal = { fg = palette.text, bg = palette.base },
     NormalFloat = { bg = palette.overlay },
     NormalNC = { fg = palette.muted },
-    MatchParen = { fg = palette.base, bg = palette.rose },
+    MatchParen = { fg = palette.love },
     Question = { fg = palette.foam },
     QuickFixLine = { fg = palette.foam },
     Search = { fg = palette.base, bg = palette.rose },
