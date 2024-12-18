@@ -130,6 +130,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'Map keys to vim.lsp.buf.*',
     callback = callback_set_keymap_configs {
         map('n', '<M-1>', vim.lsp.buf.code_action, '[LSP] Select a code action available at the current cursor position.'),
+        map('n', '<M-2>', vim.lsp.buf.rename, '[LSP] Rename all references to the symbol under cursor.'),
         map('n', '<M-f>', vim.lsp.buf.format, '[LSP] Format buffer.'),
         map('n', 'gD', lsp_definitions()),
         map('n', 'gd', lsp_definitions()),
