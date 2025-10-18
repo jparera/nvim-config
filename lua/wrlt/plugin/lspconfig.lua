@@ -1,4 +1,3 @@
-local lspconfig = require('lspconfig')
 local util = require('lspconfig.util')
 local lazy = require('lazy')
 
@@ -60,9 +59,9 @@ M.setup = function()
             on_setup(config)
         end
     end)
-    lspconfig.lua_ls.setup {}
-    lspconfig.rust_analyzer.setup {}
-    lspconfig.pyright.setup {}
+    vim.lsp.enable('lua_ls')
+    vim.lsp.enable('rust_analyzer')
+    vim.lsp.enable('pyright')
 end
 
 return M
