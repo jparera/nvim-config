@@ -29,6 +29,7 @@ lazy.setup({
         },
         {
             'nvim-treesitter/nvim-treesitter',
+            lazy = false,
             build = ':TSUpdate',
             opts = {
                 ensure_installed = {
@@ -65,7 +66,7 @@ lazy.setup({
         },
         {
             'nvim-telescope/telescope.nvim',
-            branch = '0.1.x',
+            tag = 'v0.2.0',
             dependencies = {
                 'nvim-lua/plenary.nvim',
                 'nvim-treesitter/nvim-treesitter',
@@ -109,6 +110,7 @@ lazy.setup({
                 'neovim/nvim-lspconfig',
             },
             opts = {
+                automatic_enable = false,
                 ensure_installed = {
                     'jdtls',
                     'pyright',
